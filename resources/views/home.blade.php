@@ -5,7 +5,7 @@
         <div class="flex flex-col md:flex-row gap-12">
 
             <!-- Sidebar Filter -->
-            <aside class="w-full md:w-1/4">
+            <aside class="w-full md:w-1/4 relative z-30">
                 <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-100 sticky top-24">
                     <h3 class="text-xl font-serif mb-6 text-gray-800">Categories</h3>
                     <ul class="space-y-3">
@@ -17,7 +17,7 @@
                             </a>
                         </li>
                         @foreach($categories as $category)
-                            <li>
+                            <li class="relative group/category">
                                 <a href="{{ route('home', ['category' => $category->slug]) }}"
                                     class="flex justify-between items-center text-gray-600 hover:text-green-premium transition group">
                                     <span
@@ -25,6 +25,26 @@
                                     <span
                                         class="text-xs bg-gray-100 text-gray-500 rounded-full px-2 py-0.5 group-hover:bg-green-50 group-hover:text-green-700 transition">{{ $category->products_count }}</span>
                                 </a>
+                                
+                                <!-- Subcategories Dropdown on Hover -->
+                                @if($category->subCategories && $category->subCategories->count() > 0)
+                                    <!-- Wrapper with padding to create "bridge" for hover -->
+                                    <div class="absolute left-full top-0 pl-2 hidden group-hover/category:block z-20 min-w-[220px] -mt-2">
+                                        <div class="bg-white rounded-xl shadow-xl border border-gray-100 py-3 relative">
+                                            <!-- Tiny arrow pointing left -->
+                                            <div class="absolute top-4 -left-1.5 w-3 h-3 bg-white border-l border-t border-gray-100 transform -rotate-45"></div>
+                                            
+                                            <h4 class="px-4 pb-2 text-xs font-bold text-gray-400 uppercase tracking-wider mb-1 border-b border-gray-50">Subcategories</h4>
+                                            
+                                            @foreach($category->subCategories as $subCategory)
+                                                <a href="{{ route('home', ['category' => $category->slug, 'subcategory' => $subCategory->slug]) }}"
+                                                    class="block px-4 py-2.5 text-sm text-gray-600 hover:bg-green-50 hover:text-green-premium hover:pl-5 transition-all duration-200">
+                                                    {{ $subCategory->name }}
+                                                </a>
+                                            @endforeach
+                                        </div>
+                                    </div>
+                                @endif
                             </li>
                         @endforeach
                     </ul>
@@ -43,7 +63,7 @@
                         <div
                             class="group bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 border border-gray-100">
                             <!-- Image -->
-                            <div class="relative h-64 overflow-hidden bg-gray-100">
+                            <div class="relative aspect-[3/4] overflow-hidden bg-gray-100">
                                 @if($product->main_image)
                                     <img src="{{ $product->main_image }}" alt="{{ $product->name }}"
                                         class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
@@ -75,7 +95,14 @@
                                     @endif
                                 </div>
                                 <h3 class="text-lg font-serif font-bold text-gray-900 mb-2 truncate">{{ $product->name }}</h3>
-                                <p class="text-green-premium font-bold text-xl">${{ number_format($product->price, 2) }}</p>
+                                <div class="text-green-premium font-bold text-xl">
+                                    @if($product->discount_price)
+                                        <span class="text-gray-400 line-through text-base mr-2">${{ number_format($product->price, 2) }}</span>
+                                        <span>${{ number_format($product->discount_price, 2) }}</span>
+                                    @else
+                                        <span>${{ number_format($product->price, 2) }}</span>
+                                    @endif
+                                </div>
                             </div>
                         </div>
                     @empty

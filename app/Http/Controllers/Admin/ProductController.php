@@ -34,6 +34,7 @@ class ProductController extends Controller
             'width' => 'required|numeric',
             'height' => 'required|numeric',
             'main_image' => 'nullable|image|max:2048',
+            'images.*' => 'nullable|image|max:2048',
         ]);
 
         $data = $request->all();
@@ -41,10 +42,20 @@ class ProductController extends Controller
         // Toggle handling
         $data['is_order_now_enabled'] = $request->has('is_order_now_enabled');
 
-        // Image Upload
+        // Main Image Upload
         if ($request->hasFile('main_image')) {
             $path = $request->file('main_image')->store('products', 'public');
             $data['main_image'] = '/storage/' . $path;
+        }
+
+        // Multiple Images Upload
+        if ($request->hasFile('images')) {
+            $imagePaths = [];
+            foreach ($request->file('images') as $image) {
+                $path = $image->store('products', 'public');
+                $imagePaths[] = '/storage/' . $path;
+            }
+            $data['images'] = $imagePaths;
         }
 
         Product::create($data);
@@ -69,6 +80,7 @@ class ProductController extends Controller
             'width' => 'required|numeric',
             'height' => 'required|numeric',
             'main_image' => 'nullable|image|max:2048',
+            'images.*' => 'nullable|image|max:2048',
         ]);
 
         $data = $request->all();
@@ -77,9 +89,20 @@ class ProductController extends Controller
         }
         $data['is_order_now_enabled'] = $request->has('is_order_now_enabled');
 
+        // Main Image Upload
         if ($request->hasFile('main_image')) {
             $path = $request->file('main_image')->store('products', 'public');
             $data['main_image'] = '/storage/' . $path;
+        }
+
+        // Multiple Images Upload
+        if ($request->hasFile('images')) {
+            $imagePaths = $product->images ?? [];
+            foreach ($request->file('images') as $image) {
+                $path = $image->store('products', 'public');
+                $imagePaths[] = '/storage/' . $path;
+            }
+            $data['images'] = $imagePaths;
         }
 
         $product->update($data);

@@ -25,6 +25,8 @@
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Dimensions (L
                         x W x H)</th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Weight</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Material</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">SKU</th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Order Now
                     </th>
                     <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
@@ -49,13 +51,24 @@
                             {{ $product->category->name }}
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                            ${{ number_format($product->price, 2) }}
+                            @if($product->discount_price)
+                                <span class="text-gray-400 line-through text-xs mr-1">${{ number_format($product->price, 2) }}</span>
+                                <span class="font-bold">${{ number_format($product->discount_price, 2) }}</span>
+                            @else
+                                ${{ number_format($product->price, 2) }}
+                            @endif
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                             {{ $product->length }} x {{ $product->width }} x {{ $product->height }} cm
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                             {{ $product->weight }} kg
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            {{ $product->material ?? '-' }}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            {{ $product->sku ?? '-' }}
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
                             <span
