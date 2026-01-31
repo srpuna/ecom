@@ -23,7 +23,9 @@ Route::get('/products/{slug}', [ProductController::class, 'show'])->name('produc
 
 // Cart & Checkout
 Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
-Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add'); // AJAX likely
+Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
+Route::post('/cart/update', [CartController::class, 'updateQuantity'])->name('cart.update');
+Route::post('/cart/remove', [CartController::class, 'removeItem'])->name('cart.remove');
 Route::get('/checkout/{token?}', [CartController::class, 'checkout'])->name('checkout'); // Token for inquiries
 Route::post('/checkout/calculate-shipping', [CartController::class, 'calculateShipping'])->name('checkout.calculate-shipping');
 

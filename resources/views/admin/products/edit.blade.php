@@ -27,17 +27,53 @@
 
                 <div>
                     <label class="block text-sm font-medium text-gray-700">Category</label>
-                    <select name="category_id"
+                    <select name="category_id" id="category_id"
                         class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 border p-2"
-                        required>
+                        required onchange="updateSubCategories()">
                         <option value="">Select Category</option>
                         @foreach($categories as $category)
-                            <option value="{{ $category->id }}" {{ $product->category_id == $category->id ? 'selected' : '' }}>
+                            <option value="{{ $category->id }}" {{ $product->category_id == $category->id ? 'selected' : '' }}
+                                data-subcategories="{{ json_encode($category->subCategories) }}">
                                 {{ $category->name }}
                             </option>
                         @endforeach
                     </select>
                 </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Sub-Category (Optional)</label>
+                    <select name="sub_category_id" id="sub_category_id"
+                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 border p-2">
+                        <option value="">Select Sub-Category</option>
+                    </select>
+                </div>
+
+                <script>
+                function updateSubCategories() {
+                    const categorySelect = document.getElementById('category_id');
+                    const subCategorySelect = document.getElementById('sub_category_id');
+                    const selectedOption = categorySelect.options[categorySelect.selectedIndex];
+                    const currentSubCategoryId = {{ $product->sub_category_id ?? 'null' }};
+                    
+                    // Clear existing options
+                    subCategorySelect.innerHTML = '<option value="">Select Sub-Category</option>';
+                    
+                    if (selectedOption.value) {
+                        const subCategories = JSON.parse(selectedOption.getAttribute('data-subcategories') || '[]');
+                        subCategories.forEach(subCat => {
+                            const option = document.createElement('option');
+                            option.value = subCat.id;
+                            option.textContent = subCat.name;
+                            if (currentSubCategoryId && subCat.id == currentSubCategoryId) {
+                                option.selected = true;
+                            }
+                            subCategorySelect.appendChild(option);
+                        });
+                    }
+                }
+                // Initialize on page load
+                document.addEventListener('DOMContentLoaded', updateSubCategories);
+                </script>
 
                 <div>
                     <label class="block text-sm font-medium text-gray-700">Price ($)</label>
@@ -49,6 +85,18 @@
                 <div>
                     <label class="block text-sm font-medium text-gray-700">Discount Price ($) (Optional)</label>
                     <input type="number" step="0.01" name="discount_price" value="{{ $product->discount_price }}"
+                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 border p-2">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Material (Optional)</label>
+                    <input type="text" name="material" value="{{ $product->material }}" placeholder="e.g., Wood, Cotton, Metal"
+                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 border p-2">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">SKU (Optional)</label>
+                    <input type="text" name="sku" value="{{ $product->sku }}" placeholder="e.g., PROD-12345"
                         class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 border p-2">
                 </div>
 
@@ -101,9 +149,32 @@
                 </div>
 
                 <div class="col-span-2">
-                    <label class="block text-sm font-medium text-gray-700">Description</label>
-                    <textarea name="description" rows="3"
-                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 border p-2">{{ $product->description }}</textarea>
+                    <label class="block text-sm font-medium text-gray-700">Additional Images (Multiple)</label>
+                    <input type="file" name="images[]" multiple accept="image/*"
+                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 border p-2">
+                    <p class="text-xs text-gray-500 mt-1">You can select multiple images at once. New images will be added to existing ones.</p>
+                    @if($product->images && count($product->images) > 0)
+                        <div class="mt-2 flex gap-2 flex-wrap">
+                            @foreach($product->images as $image)
+                                <img src="{{ $image }}" alt="" class="h-16 w-16 object-cover rounded border">
+                            @endforeach
+                        </div>
+                    @endif
+                </div>
+
+                <div class="col-span-2">
+                    <label class="block text-sm font-medium text-gray-700">Short Description (Optional)</label>
+                    <textarea name="description" rows="2"
+                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 border p-2"
+                        placeholder="Brief product summary">{{ $product->description }}</textarea>
+                </div>
+
+                <div class="col-span-2">
+                    <label class="block text-sm font-medium text-gray-700">Long Description</label>
+                    <textarea name="long_description" rows="6"
+                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 border p-2"
+                        placeholder="Detailed product description with formatting">{{ $product->long_description }}</textarea>
+                    <p class="text-xs text-gray-500 mt-1">This will be displayed prominently on the product page</p>
                 </div>
 
                 <!-- Settings -->

@@ -37,9 +37,41 @@
                             </div>
                             <div>
                                 <label class="block text-sm text-gray-600 mb-1">Country (Important for shipping)</label>
-                                <input type="text" name="country" x-model="country" @blur="fetchShippingRates"
-                                    value="{{ $inquiry->country ?? '' }}" placeholder="Country (e.g. US, UK)"
+                                <select name="country" x-model="country" @change="fetchShippingRates"
                                     class="w-full p-3 bg-gray-50 border rounded-lg" required>
+                                    <option value="">Select Country</option>
+                                    <option value="US" {{ ($inquiry->country ?? '') == 'US' ? 'selected' : '' }}>United States</option>
+                                    <option value="GB" {{ ($inquiry->country ?? '') == 'GB' ? 'selected' : '' }}>United Kingdom</option>
+                                    <option value="CA" {{ ($inquiry->country ?? '') == 'CA' ? 'selected' : '' }}>Canada</option>
+                                    <option value="AU" {{ ($inquiry->country ?? '') == 'AU' ? 'selected' : '' }}>Australia</option>
+                                    <option value="DE" {{ ($inquiry->country ?? '') == 'DE' ? 'selected' : '' }}>Germany</option>
+                                    <option value="FR" {{ ($inquiry->country ?? '') == 'FR' ? 'selected' : '' }}>France</option>
+                                    <option value="IT" {{ ($inquiry->country ?? '') == 'IT' ? 'selected' : '' }}>Italy</option>
+                                    <option value="ES" {{ ($inquiry->country ?? '') == 'ES' ? 'selected' : '' }}>Spain</option>
+                                    <option value="NL" {{ ($inquiry->country ?? '') == 'NL' ? 'selected' : '' }}>Netherlands</option>
+                                    <option value="BE" {{ ($inquiry->country ?? '') == 'BE' ? 'selected' : '' }}>Belgium</option>
+                                    <option value="CH" {{ ($inquiry->country ?? '') == 'CH' ? 'selected' : '' }}>Switzerland</option>
+                                    <option value="SE" {{ ($inquiry->country ?? '') == 'SE' ? 'selected' : '' }}>Sweden</option>
+                                    <option value="NO" {{ ($inquiry->country ?? '') == 'NO' ? 'selected' : '' }}>Norway</option>
+                                    <option value="DK" {{ ($inquiry->country ?? '') == 'DK' ? 'selected' : '' }}>Denmark</option>
+                                    <option value="FI" {{ ($inquiry->country ?? '') == 'FI' ? 'selected' : '' }}>Finland</option>
+                                    <option value="PL" {{ ($inquiry->country ?? '') == 'PL' ? 'selected' : '' }}>Poland</option>
+                                    <option value="AT" {{ ($inquiry->country ?? '') == 'AT' ? 'selected' : '' }}>Austria</option>
+                                    <option value="IE" {{ ($inquiry->country ?? '') == 'IE' ? 'selected' : '' }}>Ireland</option>
+                                    <option value="NZ" {{ ($inquiry->country ?? '') == 'NZ' ? 'selected' : '' }}>New Zealand</option>
+                                    <option value="SG" {{ ($inquiry->country ?? '') == 'SG' ? 'selected' : '' }}>Singapore</option>
+                                    <option value="JP" {{ ($inquiry->country ?? '') == 'JP' ? 'selected' : '' }}>Japan</option>
+                                    <option value="KR" {{ ($inquiry->country ?? '') == 'KR' ? 'selected' : '' }}>South Korea</option>
+                                    <option value="CN" {{ ($inquiry->country ?? '') == 'CN' ? 'selected' : '' }}>China</option>
+                                    <option value="IN" {{ ($inquiry->country ?? '') == 'IN' ? 'selected' : '' }}>India</option>
+                                    <option value="BR" {{ ($inquiry->country ?? '') == 'BR' ? 'selected' : '' }}>Brazil</option>
+                                    <option value="MX" {{ ($inquiry->country ?? '') == 'MX' ? 'selected' : '' }}>Mexico</option>
+                                    <option value="ZA" {{ ($inquiry->country ?? '') == 'ZA' ? 'selected' : '' }}>South Africa</option>
+                                    <option value="AE" {{ ($inquiry->country ?? '') == 'AE' ? 'selected' : '' }}>United Arab Emirates</option>
+                                    <option value="SA" {{ ($inquiry->country ?? '') == 'SA' ? 'selected' : '' }}>Saudi Arabia</option>
+                                    <option value="TR" {{ ($inquiry->country ?? '') == 'TR' ? 'selected' : '' }}>Turkey</option>
+                                    <option value="RU" {{ ($inquiry->country ?? '') == 'RU' ? 'selected' : '' }}>Russia</option>
+                                </select>
                                 <p class="text-xs text-red-500 mt-1" x-show="shippingError" x-text="shippingError"></p>
                             </div>
                         </div>
