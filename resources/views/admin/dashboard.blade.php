@@ -9,16 +9,65 @@
 @section('content')
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
         <div class="bg-white rounded-lg shadow p-6 border-l-4 border-green-500">
-            <h3 class="text-gray-500 text-sm font-medium uppercase">Total Orders</h3>
-            <p class="text-3xl font-bold text-gray-800 mt-2">124</p>
-        </div>
-        <div class="bg-white rounded-lg shadow p-6 border-l-4 border-blue-500">
-            <h3 class="text-gray-500 text-sm font-medium uppercase">Pending Inquiries</h3>
-            <p class="text-3xl font-bold text-gray-800 mt-2">12</p>
+            <h3 class="text-gray-500 text-sm font-medium uppercase">Total Products</h3>
+            <p class="text-3xl font-bold text-gray-800 mt-2">{{ $totalProducts }}</p>
         </div>
         <div class="bg-white rounded-lg shadow p-6 border-l-4 border-yellow-500">
-            <h3 class="text-gray-500 text-sm font-medium uppercase">Revenue</h3>
-            <p class="text-3xl font-bold text-gray-800 mt-2">$4,500</p>
+            <h3 class="text-gray-500 text-sm font-medium uppercase">Total Categories</h3>
+            <p class="text-3xl font-bold text-gray-800 mt-2">{{ $totalCategories }}</p>
+        </div>
+        <div class="bg-white rounded-lg shadow p-6 border-l-4 border-blue-500">
+            <h3 class="text-gray-500 text-sm font-medium uppercase">Total Inquiries</h3>
+            <p class="text-3xl font-bold text-gray-800 mt-2">{{ $totalInquiries }}</p>
+        </div>
+    </div>
+
+    <!-- Maintenance Mode Toggle -->
+    <div class="col-span-1 md:col-span-3 mb-6 bg-white rounded-lg shadow p-6">
+        <div class="flex items-center justify-between">
+            <div>
+                <h3 class="text-lg font-medium text-gray-900">System Status</h3>
+                <p class="text-sm text-gray-500 mt-1">
+                    Current Status: 
+                    @if(Cache::get('maintenance_mode'))
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                            Maintenance Mode
+                        </span>
+                    @else
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                            Live
+                        </span>
+                    @endif
+                </p>
+            </div>
+            <button onclick="document.getElementById('maintenanceModal').classList.remove('hidden')" 
+                class="bg-gray-800 text-white px-4 py-2 rounded shadow hover:bg-gray-700 transition">
+                {{ Cache::get('maintenance_mode') ? 'Disable Maintenance' : 'Enable Maintenance' }}
+            </button>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div id="maintenanceModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+        <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+            <div class="mt-3 text-center">
+                <h3 class="text-lg leading-6 font-medium text-gray-900">Confirm Action</h3>
+                <div class="mt-2 px-1">
+                    <p class="text-sm text-gray-500">
+                        Enter your password to {{ Cache::get('maintenance_mode') ? 'disable' : 'enable' }} maintenance mode.
+                    </p>
+                    <form action="{{ route('admin.maintenance.toggle') }}" method="POST" class="mt-4">
+                        @csrf
+                        <input type="password" name="password" placeholder="Confirm Password" required
+                            class="w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 border p-2 mb-4">
+                        <div class="flex gap-2 justify-center">
+                             <button type="button" onclick="document.getElementById('maintenanceModal').classList.add('hidden')"
+                                class="bg-gray-300 text-gray-700 px-4 py-2 rounded hover:bg-gray-400">Cancel</button>
+                            <button type="submit" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700">Confirm</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
 

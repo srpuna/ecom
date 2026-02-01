@@ -13,7 +13,7 @@ class ShippingController extends Controller
     public function index()
     {
         $zones = ShippingZone::with('rates.provider')->get();
-        $providers = ShippingProvider::all();
+        $providers = ShippingProvider::with('rates.zone')->get();
 
         return view('admin.shipping.index', compact('zones', 'providers'));
     }

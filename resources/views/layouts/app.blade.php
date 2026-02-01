@@ -54,17 +54,20 @@
                 <!-- Mobile menu button could go here if needed -->
             </div>
 
-            <!-- Centered Search Bar -->
-            <div class="flex justify-center w-full my-4 md:my-0 md:w-1/2">
-                <div class="w-full md:w-3/4 lg:w-2/3 relative">
-                    <input type="text" placeholder="Search..."
-                        class="bg-cream border-2 border-gold rounded-full py-2 px-6 pr-12 text-base shadow focus:outline-none focus:border-green-premium transition w-full placeholder-gold font-serif text-green-premium">
-                    <button type="submit" class="absolute right-2 top-1/2 -translate-y-1/2 bg-transparent border-none shadow-none p-0 m-0 flex items-center justify-center">
-                        <svg class="w-6 h-6 text-green-premium" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                            <ellipse cx="11" cy="11" rx="7" ry="7" stroke="currentColor"/>
-                            <path d="M17.5 17.5L21 21" stroke="currentColor" stroke-linecap="round"/>
-                        </svg>
-                    </button>
+            <!-- Search, Cart, Profile -->
+            <div class="flex items-center space-x-6">
+                <!-- Search Bar (Visual only for now) -->
+                <!-- Search Bar -->
+                <div class="hidden md:block relative">
+                    <form action="{{ route('home') }}" method="GET">
+                        <input type="text" name="search" placeholder="Search..." value="{{ request('search') }}"
+                            class="bg-white border border-gray-200 rounded-full py-1 px-4 text-sm focus:outline-none focus:border-green-premium w-64">
+                        <button type="submit" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-green-premium">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                            </svg>
+                        </button>
+                    </form>
                 </div>
             </div>
 

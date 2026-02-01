@@ -7,14 +7,70 @@
             <!-- Image Section -->
             <div class="md:w-1/2">
                 <!-- Main Image Display -->
-                <div class="rounded-xl overflow-hidden mb-4 bg-gray-50 aspect-[3/4] flex items-center justify-center relative">
-                    @if($product->main_image)
-                        <img src="{{ $product->main_image }}" alt="{{ $product->name }}"
-                            class="max-h-full max-w-full object-contain" id="mainProductImage">
-                    @else
-                        <span class="text-gray-400 text-lg">No Image</span>
-                    @endif
+                <!-- Main Image Display -->
+                <div class="relative z-10">
+                    <div id="imageContainer" class="rounded-xl overflow-hidden mb-4 bg-gray-50 h-[50vh] md:h-[90vh] flex items-center justify-center relative cursor-crosshair">
+                        @if($product->main_image)
+                            <img src="{{ $product->main_image }}" alt="{{ $product->name }}"
+                                class="max-h-full max-w-full object-contain" id="mainProductImage">
+                        @else
+                            <span class="text-gray-400 text-lg">No Image</span>
+                        @endif
+                    </div>
+                
+                    <!-- Zoom Result Container (Side View) -->
+                    <div id="zoomResult" class="hidden fixed md:absolute left-0 md:left-[105%] top-0 md:top-0 w-full md:w-[500px] h-[500px] bg-white border border-gray-200 shadow-2xl z-50 rounded-lg overflow-hidden"></div>
                 </div>
+
+                <script>
+                    const container = document.getElementById('imageContainer');
+                    const img = document.getElementById('mainProductImage');
+                    const result = document.getElementById('zoomResult');
+
+                    if (container && img && result) {
+                        container.addEventListener('mousemove', (e) => {
+                            const rect = container.getBoundingClientRect();
+                            const x = e.clientX - rect.left;
+                            const y = e.clientY - rect.top;
+                            
+                            // Check if cursor is within the container
+                            if (x < 0 || x > rect.width || y < 0 || y > rect.height) {
+                                result.classList.add('hidden');
+                                return;
+                            }
+
+                            // Show result
+                            result.classList.remove('hidden');
+                            
+                            // Set background image
+                            result.style.backgroundImage = `url('${img.src}')`;
+                            
+                            // Calculate zoom ratios. 
+                            // We want '100%' zoom or magnified. Let's assume 2x magnification.
+                            // If we want "native" size, we would check img.naturalWidth.
+                            // But consistency suggests a fixed multiple.
+                            
+                            const cx = result.offsetWidth / result.offsetWidth * 2.5; // Zoom factor
+                            const cy = result.offsetHeight / result.offsetHeight * 2.5;
+
+                            result.style.backgroundSize = (rect.width * cx) + "px " + (rect.height * cy) + "px";
+                            
+                            // Move background
+                            // Formula: -(x * cx - resultWidth / 2) ? No, standard lens formula
+                            // bgPosX = (x / width * 100)%
+                            // But for exact pixel match:
+                            
+                            const fx = (x / rect.width) * 100;
+                            const fy = (y / rect.height) * 100;
+                            
+                            result.style.backgroundPosition = `${fx}% ${fy}%`;
+                        });
+
+                        container.addEventListener('mouseleave', () => {
+                            result.classList.add('hidden');
+                        });
+                    }
+                </script>
                 
                 <!-- Horizontal Scrollable Thumbnails -->
                 @if($product->images && count($product->images) > 0)

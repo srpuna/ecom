@@ -15,6 +15,33 @@
         </a>
     </div>
 
+    <!-- Search & Filter -->
+    <div class="bg-gray-50 p-4 rounded-lg mb-6 border border-gray-200">
+        <form method="GET" class="flex flex-col md:flex-row gap-4 items-end">
+            <div class="flex-1 w-full">
+                <label class="block text-sm font-medium text-gray-700 mb-1">Search</label>
+                <input type="text" name="search" value="{{ request('search') }}" placeholder="Product Name or SKU"
+                    class="w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 border p-2">
+            </div>
+            <div class="w-full md:w-64">
+                <label class="block text-sm font-medium text-gray-700 mb-1">Category</label>
+                <select name="category_id"
+                    class="w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 border p-2">
+                    <option value="">All Categories</option>
+                    @foreach($categories as $category)
+                        <option value="{{ $category->id }}" {{ request('category_id') == $category->id ? 'selected' : '' }}>
+                            {{ $category->name }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+            <button type="submit" class="bg-gray-800 text-white px-4 py-2 rounded hover:bg-gray-700 transition">Filter</button>
+            @if(request()->anyFilled(['search', 'category_id']))
+                <a href="{{ route('admin.products.index') }}" class="text-gray-500 hover:text-gray-700 px-4 py-2">Clear</a>
+            @endif
+        </form>
+    </div>
+
     <div class="bg-white rounded-lg shadow overflow-x-auto">
         <table class="min-w-full divide-y divide-gray-200">
             <thead class="bg-gray-50">

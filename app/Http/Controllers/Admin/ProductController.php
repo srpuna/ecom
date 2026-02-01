@@ -11,10 +11,26 @@ use Illuminate\Support\Str;
 
 class ProductController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $products = Product::with('category')->latest()->paginate(10);
-        return view('admin.products.index', compact('products'));
+        $query = Product::with('category');
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('sku', 'like', "%{$search}%");
+            });
+        }
+
+        if ($request->filled('category_id')) {
+            $query->where('category_id', $request->category_id);
+        }
+
+        $products = $query->latest()->paginate(10);
+        $categories = Category::all();
+
+        return view('admin.products.index', compact('products', 'categories'));
     }
 
     public function create()
@@ -27,6 +43,7 @@ class ProductController extends Controller
     {
         $request->validate([
             'name' => 'required',
+            'sku' => 'required|unique:products,sku',
             'price' => 'required|numeric',
             'category_id' => 'required|exists:categories,id',
             'weight' => 'required|numeric', // Important for shipping
@@ -73,6 +90,7 @@ class ProductController extends Controller
     {
         $request->validate([
             'name' => 'required',
+            'sku' => 'required|unique:products,sku,' . $product->id,
             'price' => 'required|numeric',
             'category_id' => 'required|exists:categories,id',
             'weight' => 'required|numeric',
