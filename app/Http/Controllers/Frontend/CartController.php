@@ -49,9 +49,9 @@ class CartController extends Controller
             $cartItems[] = [
                 'product' => $product,
                 'quantity' => $qty,
-                'subtotal' => $product->price * $qty
+                'subtotal' => $product->effective_price * $qty
             ];
-            $subtotal += ($product->price * $qty);
+            $subtotal += ($product->effective_price * $qty);
         }
 
         return view('frontend.cart.index', compact('cartItems', 'subtotal'));
@@ -73,9 +73,9 @@ class CartController extends Controller
                 $items[] = [
                     'product' => $inquiry->product,
                     'quantity' => $qty,
-                    'subtotal' => $inquiry->product->price * $qty
+                    'subtotal' => $inquiry->product->effective_price * $qty
                 ];
-                $subtotal += ($inquiry->product->price * $qty);
+                $subtotal += ($inquiry->product->effective_price * $qty);
             }
         } else {
             // Standard Cart Flow
@@ -89,9 +89,9 @@ class CartController extends Controller
                 $items[] = [
                     'product' => $product,
                     'quantity' => $qty,
-                    'subtotal' => $product->price * $qty
+                    'subtotal' => $product->effective_price * $qty
                 ];
-                $subtotal += ($product->price * $qty);
+                $subtotal += ($product->effective_price * $qty);
             }
         }
 
@@ -126,5 +126,35 @@ class CartController extends Controller
         $rates = $this->shippingService->calculateShipping($items, $country);
 
         return response()->json(['rates' => $rates]);
+    }
+
+    // Update cart quantity
+    public function updateQuantity(Request $request)
+    {
+        $productId = $request->product_id;
+        $quantity = max(1, (int)$request->quantity); // Ensure at least 1
+
+        $cart = session()->get('cart', []);
+
+        if (isset($cart[$productId])) {
+            $cart[$productId] = $quantity;
+            session()->put('cart', $cart);
+        }
+
+        return redirect()->route('cart.index')->with('success', 'Cart updated!');
+    }
+
+    // Remove item from cart
+    public function removeItem(Request $request)
+    {
+        $productId = $request->product_id;
+        $cart = session()->get('cart', []);
+
+        if (isset($cart[$productId])) {
+            unset($cart[$productId]);
+            session()->put('cart', $cart);
+        }
+
+        return redirect()->route('cart.index')->with('success', 'Item removed from cart!');
     }
 }

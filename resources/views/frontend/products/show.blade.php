@@ -6,15 +6,37 @@
         <div class="flex flex-col md:flex-row gap-12 bg-white p-8 rounded-2xl shadow-sm">
             <!-- Image Section -->
             <div class="md:w-1/2">
-                <div class="rounded-xl overflow-hidden mb-4 bg-gray-50 h-96 flex items-center justify-center">
+                <!-- Main Image Display -->
+                <div class="rounded-xl overflow-hidden mb-4 bg-gray-50 aspect-[3/4] flex items-center justify-center relative">
                     @if($product->main_image)
                         <img src="{{ $product->main_image }}" alt="{{ $product->name }}"
-                            class="max-h-full max-w-full object-contain">
+                            class="max-h-full max-w-full object-contain" id="mainProductImage">
                     @else
                         <span class="text-gray-400 text-lg">No Image</span>
                     @endif
                 </div>
-                <!-- Secondary images would go here -->
+                
+                <!-- Horizontal Scrollable Thumbnails -->
+                @if($product->images && count($product->images) > 0)
+                    <div class="relative">
+                        <div class="flex gap-3 overflow-x-auto pb-2 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
+                            <!-- Main image thumbnail -->
+                            @if($product->main_image)
+                                <img src="{{ $product->main_image }}" 
+                                    onclick="document.getElementById('mainProductImage').src='{{ $product->main_image }}'"
+                                    class="h-20 w-20 object-cover rounded-lg border-2 border-green-premium cursor-pointer hover:opacity-75 transition flex-shrink-0"
+                                    alt="Main">
+                            @endif
+                            <!-- Additional images -->
+                            @foreach($product->images as $image)
+                                <img src="{{ $image }}" 
+                                    onclick="document.getElementById('mainProductImage').src='{{ $image }}'"
+                                    class="h-20 w-20 object-cover rounded-lg border-2 border-gray-200 cursor-pointer hover:border-green-premium hover:opacity-75 transition flex-shrink-0"
+                                    alt="Product image">
+                            @endforeach
+                        </div>
+                    </div>
+                @endif
             </div>
 
             <!-- Details Section -->
@@ -26,21 +48,30 @@
 
                 <h1 class="text-4xl font-serif font-bold text-gray-900 mb-4">{{ $product->name }}</h1>
 
-                <p class="text-3xl font-bold text-green-premium mb-6">${{ number_format($product->price, 2) }}</p>
-
-                <div class="prose text-gray-600 mb-8 max-w-none">
-                    <p>{{ $product->description }}</p>
+                <div class="text-3xl font-bold text-green-premium mb-6">
+                    @if($product->discount_price)
+                        <span class="text-gray-400 line-through text-xl mr-2">${{ number_format($product->price, 2) }}</span>
+                        <span>${{ number_format($product->discount_price, 2) }}</span>
+                    @else
+                        <span>${{ number_format($product->price, 2) }}</span>
+                    @endif
                 </div>
+
+                @if($product->description)
+                    <div class="prose text-gray-600 mb-8 max-w-none">
+                        <p>{{ $product->description }}</p>
+                    </div>
+                @endif
 
                 <div class="bg-gray-50 border border-gray-100 rounded-lg p-6 mb-8">
                     <h3 class="font-serif font-bold text-lg mb-4 text-gray-800">Product Specifications</h3>
                     <dl class="grid grid-cols-2 gap-x-4 gap-y-4 text-sm">
                         <dt class="text-gray-500">Dimensions (L x W x H)</dt>
-                        <dd class="font-medium text-gray-900">{{ $product->length }}cm x {{ $product->width }}cm x
-                            {{ $product->height }}cm</dd>
+                        <dd class="font-medium text-gray-900">{{ $product->formatted_length }}cm x {{ $product->formatted_width }}cm x
+                            {{ $product->formatted_height }}cm</dd>
 
                         <dt class="text-gray-500">Weight</dt>
-                        <dd class="font-medium text-gray-900">{{ $product->weight }} kg</dd>
+                        <dd class="font-medium text-gray-900">{{ $product->formatted_weight }} kg</dd>
 
                         <dt class="text-gray-500">Material</dt>
                         <dd class="font-medium text-gray-900">{{ $product->material ?? 'N/A' }}</dd>
@@ -115,6 +146,16 @@
             </div>
         </div>
 
+        <!-- Long Description Section -->
+        @if($product->long_description)
+            <div class="mt-12 bg-white p-8 rounded-2xl shadow-sm">
+                <h2 class="text-3xl font-serif font-bold text-gray-900 mb-6 border-b pb-4">Product Details</h2>
+                <div class="prose prose-lg max-w-none text-gray-700">
+                    {!! nl2br(e($product->long_description)) !!}
+                </div>
+            </div>
+        @endif
+
         <!-- Related Products -->
         @if($relatedProducts->count() > 0)
             <div class="mt-20">
@@ -123,11 +164,18 @@
                     @foreach($relatedProducts as $relProduct)
                         <!-- Simple Card -->
                         <a href="{{ route('products.show', $relProduct->slug ?? $relProduct->id) }}" class="group block">
-                            <div class="bg-gray-100 h-64 rounded-lg overflow-hidden mb-4">
+                            <div class="bg-gray-100 aspect-[3/4] rounded-lg overflow-hidden mb-4">
                                 <img src="{{ $relProduct->main_image }}" alt="" class="w-full h-full object-cover">
                             </div>
                             <h3 class="font-bold text-lg group-hover:text-green-premium">{{ $relProduct->name }}</h3>
-                            <p class="text-gray-600">${{ $relProduct->price }}</p>
+                            <div class="text-green-premium font-bold">
+                                @if($relProduct->discount_price)
+                                    <span class="text-gray-400 line-through text-sm mr-2">${{ number_format($relProduct->price, 2) }}</span>
+                                    <span>${{ number_format($relProduct->discount_price, 2) }}</span>
+                                @else
+                                    <span>${{ number_format($relProduct->price, 2) }}</span>
+                                @endif
+                            </div>
                         </a>
                     @endforeach
                 </div>

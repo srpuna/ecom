@@ -45,28 +45,31 @@
 
     <!-- Header -->
     <header class="bg-cream sticky top-0 z-50 border-b border-gray-100">
-        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
-            <!-- Logo / Store Name -->
-            <a href="{{ route('home') }}" class="text-2xl font-bold font-serif text-green-premium tracking-wide">
-                LuxeStore
-            </a>
+        <div class="container mx-auto px-6 py-4 flex flex-col md:flex-row md:justify-between md:items-center">
+            <div class="flex items-center justify-between w-full md:w-auto">
+                <!-- Logo / Store Name -->
+                <a href="{{ route('home') }}" class="text-2xl font-bold font-serif text-green-premium tracking-wide">
+                    LuxeStore
+                </a>
+                <!-- Mobile menu button could go here if needed -->
+            </div>
 
-            <!-- Nav Links -->
-            <nav class="hidden md:flex space-x-8">
-                <a href="{{ route('home') }}" class="text-gray-600 hover:text-green-premium transition">Home</a>
-                <a href="{{ route('products.index') }}"
-                    class="text-gray-600 hover:text-green-premium transition">Products</a>
-                <a href="#" class="text-gray-600 hover:text-green-premium transition">Blog</a>
-            </nav>
-
-            <!-- Search, Cart, Profile -->
-            <div class="flex items-center space-x-6">
-                <!-- Search Bar (Visual only for now) -->
-                <div class="hidden md:block relative">
+            <!-- Centered Search Bar -->
+            <div class="flex justify-center w-full my-4 md:my-0 md:w-1/2">
+                <div class="w-full md:w-3/4 lg:w-2/3 relative">
                     <input type="text" placeholder="Search..."
-                        class="bg-white border border-gray-200 rounded-full py-1 px-4 text-sm focus:outline-none focus:border-green-premium">
+                        class="bg-cream border-2 border-gold rounded-full py-2 px-6 pr-12 text-base shadow focus:outline-none focus:border-green-premium transition w-full placeholder-gold font-serif text-green-premium">
+                    <button type="submit" class="absolute right-2 top-1/2 -translate-y-1/2 bg-transparent border-none shadow-none p-0 m-0 flex items-center justify-center">
+                        <svg class="w-6 h-6 text-green-premium" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                            <ellipse cx="11" cy="11" rx="7" ry="7" stroke="currentColor"/>
+                            <path d="M17.5 17.5L21 21" stroke="currentColor" stroke-linecap="round"/>
+                        </svg>
+                    </button>
                 </div>
+            </div>
 
+            <!-- Cart & Admin -->
+            <div class="flex items-center justify-end space-x-6 w-full md:w-auto">
                 <!-- Cart -->
                 <a href="{{ route('cart.index') }}" class="relative text-gray-600 hover:text-green-premium">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
