@@ -27,6 +27,16 @@ class HomeController extends Controller
             });
         }
 
+        // Filter by Search Term
+        if ($request->has('search')) {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('description', 'like', "%{$search}%")
+                  ->orWhere('long_description', 'like', "%{$search}%");
+            });
+        }
+
         $products = $query->latest()->paginate(9);
         $categories = Category::with('subCategories')->withCount('products')->get();
         $totalProducts = $products->total();

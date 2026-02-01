@@ -32,9 +32,16 @@ Route::post('/checkout/calculate-shipping', [CartController::class, 'calculateSh
 // Inquiry
 Route::post('/products/{product}/inquire', [FrontendInquiryController::class, 'store'])->name('inquiry.store');
 
+// Auth Routes
+Route::get('/login', [\App\Http\Controllers\Auth\LoginController::class, 'showLoginForm'])->name('login');
+Route::post('/login', [\App\Http\Controllers\Auth\LoginController::class, 'login'])->name('login.post');
+Route::post('/logout', [\App\Http\Controllers\Auth\LoginController::class, 'logout'])->name('logout');
+
 // Admin
-Route::prefix('admin')->name('admin.')->group(function () {
+// Admin
+Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+    Route::post('/maintenance/toggle', [DashboardController::class, 'toggleMaintenance'])->name('maintenance.toggle');
 
     // Categories
     Route::resource('categories', \App\Http\Controllers\Admin\CategoryController::class);

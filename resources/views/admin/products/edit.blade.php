@@ -26,6 +26,13 @@
                 </div>
 
                 <div>
+                    <label class="block text-sm font-medium text-gray-700">SKU (Unique Identifier)</label>
+                    <input type="text" name="sku" value="{{ $product->sku }}"
+                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 border p-2"
+                        required>
+                </div>
+
+                <div>
                     <label class="block text-sm font-medium text-gray-700">Category</label>
                     <select name="category_id" id="category_id"
                         class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 border p-2"
