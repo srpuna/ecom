@@ -9,6 +9,9 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ProductController as AdminProductController;
 use App\Http\Controllers\Admin\InquiryController as AdminInquiryController;
 use App\Http\Controllers\Admin\ShippingController;
+use App\Http\Controllers\Admin\AdminUserController;
+use App\Http\Controllers\Admin\RoleController;
+use App\Http\Controllers\Admin\SiteSettingController;
 
 /*
 |--------------------------------------------------------------------------
@@ -37,7 +40,6 @@ Route::get('/login', [\App\Http\Controllers\Auth\LoginController::class, 'showLo
 Route::post('/login', [\App\Http\Controllers\Auth\LoginController::class, 'login'])->name('login.post');
 Route::post('/logout', [\App\Http\Controllers\Auth\LoginController::class, 'logout'])->name('logout');
 
-// Admin
 // Admin
 Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
@@ -72,4 +74,19 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::get('shipping/rates/{rate}/edit', [ShippingController::class, 'editRate'])->name('shipping.rates.edit');
     Route::put('shipping/rates/{rate}', [ShippingController::class, 'updateRate'])->name('shipping.rates.update');
     Route::delete('shipping/rates/{rate}', [ShippingController::class, 'destroyRate'])->name('shipping.rates.destroy');
+
+    // Site Settings (Logo Management)
+    Route::get('settings', [SiteSettingController::class, 'index'])->name('settings.index');
+    Route::post('settings', [SiteSettingController::class, 'update'])->name('settings.update');
+
+    // Admin User Management (Super Admin Only)
+    Route::middleware('super_admin')->group(function () {
+        Route::resource('users', AdminUserController::class);
+        Route::patch('users/{user}/toggle-status', [AdminUserController::class, 'toggleStatus'])->name('users.toggle-status');
+        Route::get('users/{user}/reset-password', [AdminUserController::class, 'showResetPasswordForm'])->name('users.reset-password');
+        Route::put('users/{user}/reset-password', [AdminUserController::class, 'resetPassword'])->name('users.reset-password.update');
+        
+        // Role Management
+        Route::resource('roles', RoleController::class);
+    });
 });

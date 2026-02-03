@@ -4,7 +4,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LuxeStore - Premium Ecommerce</title>
+    <title>{{ $siteSettings['site_name'] }} - Premium Ecommerce</title>
+    @if($siteSettings['favicon'] && $siteSettings['favicon']->value)
+        <link rel="icon" type="image/x-icon" href="{{ asset('storage/' . $siteSettings['favicon']->value) }}">
+    @endif
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -48,8 +51,16 @@
         <div class="container mx-auto px-6 py-4 flex flex-col md:flex-row md:justify-between md:items-center">
             <div class="flex items-center justify-between w-full md:w-auto">
                 <!-- Logo / Store Name -->
-                <a href="{{ route('home') }}" class="text-2xl font-bold font-serif text-green-premium tracking-wide">
-                    LuxeStore
+                <a href="{{ route('home') }}" class="flex items-center space-x-3">
+                    @if($siteSettings['navbar_logo'] && $siteSettings['navbar_logo']->value)
+                        <img src="{{ asset('storage/' . $siteSettings['navbar_logo']->value) }}" 
+                             alt="{{ $siteSettings['site_name'] }}" 
+                             class="h-12 w-auto object-contain">
+                    @else
+                        <span class="text-2xl font-bold font-serif text-green-premium tracking-wide">
+                            {{ $siteSettings['site_name'] }}
+                        </span>
+                    @endif
                 </a>
                 <!-- Mobile menu button could go here if needed -->
             </div>
@@ -108,28 +119,47 @@
 
     <!-- Footer -->
     <footer class="bg-green-premium text-white py-12">
-        <div class="container mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-8">
-            <div>
-                <h3 class="text-xl font-serif mb-4">LuxeStore</h3>
-                <p class="text-gray-300 text-sm">Premium curated products for your lifestyle.</p>
+        <div class="container mx-auto px-6">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    @if($siteSettings['footer_logo'] && $siteSettings['footer_logo']->value)
+                        <img src="{{ asset('storage/' . $siteSettings['footer_logo']->value) }}" 
+                             alt="{{ $siteSettings['site_name'] }}" 
+                             class="h-16 w-auto object-contain mb-4">
+                    @else
+                        <h3 class="text-xl font-serif mb-4">{{ $siteSettings['site_name'] }}</h3>
+                    @endif
+                    <p class="text-gray-300 text-sm">Premium curated products for your lifestyle.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4">Shop</h4>
+                    <ul class="space-y-2 text-gray-300 text-sm">
+                        <li><a href="#" class="hover:text-gold">New Arrivals</a></li>
+                        <li><a href="#" class="hover:text-gold">Best Sellers</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4">Support</h4>
+                    <ul class="space-y-2 text-gray-300 text-sm">
+                        <li><a href="#" class="hover:text-gold">Contact Us</a></li>
+                        <li><a href="#" class="hover:text-gold">Shipping Policy</a></li>
+                    </ul>
+                </div>
+                <!-- QR Code Column -->
+                <div class="flex flex-col items-center md:items-end">
+                    @if($siteSettings['footer_qr_code'] && $siteSettings['footer_qr_code']->value)
+                        <div class="text-center md:text-right">
+                            <h4 class="font-bold mb-4">Scan to Connect</h4>
+                            <img src="{{ asset('storage/' . $siteSettings['footer_qr_code']->value) }}" 
+                                 alt="QR Code" 
+                                 class="w-32 h-32 object-contain bg-white p-2 rounded">
+                        </div>
+                    @endif
+                </div>
             </div>
-            <div>
-                <h4 class="font-bold mb-4">Shop</h4>
-                <ul class="space-y-2 text-gray-300 text-sm">
-                    <li><a href="#" class="hover:text-gold">New Arrivals</a></li>
-                    <li><a href="#" class="hover:text-gold">Best Sellers</a></li>
-                </ul>
+            <div class="mt-8 border-t border-gray-700 pt-8 text-center text-gray-400 text-sm">
+                &copy; 2026 {{ $siteSettings['site_name'] }}. All rights reserved.
             </div>
-            <div>
-                <h4 class="font-bold mb-4">Support</h4>
-                <ul class="space-y-2 text-gray-300 text-sm">
-                    <li><a href="#" class="hover:text-gold">Contact Us</a></li>
-                    <li><a href="#" class="hover:text-gold">Shipping Policy</a></li>
-                </ul>
-            </div>
-        </div>
-        <div class="mt-8 border-t border-gray-700 pt-8 text-center text-gray-400 text-sm">
-            &copy; 2026 LuxeStore. All rights reserved.
         </div>
     </footer>
 
