@@ -20,31 +20,40 @@
 
                 <div>
                     <label class="block text-sm font-medium text-gray-700">Product Name</label>
-                    <input type="text" name="name" value="{{ $product->name }}"
-                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 border p-2"
+                    <input type="text" name="name" value="{{ old('name', $product->name) }}"
+                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 border p-2 @error('name') border-red-500 @enderror"
                         required>
+                    @error('name')
+                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                    @enderror
                 </div>
 
                 <div>
                     <label class="block text-sm font-medium text-gray-700">SKU (Unique Identifier)</label>
-                    <input type="text" name="sku" value="{{ $product->sku }}"
-                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 border p-2"
+                    <input type="text" name="sku" value="{{ old('sku', $product->sku) }}"
+                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 border p-2 @error('sku') border-red-500 @enderror"
                         required>
+                    @error('sku')
+                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                    @enderror
                 </div>
 
                 <div>
                     <label class="block text-sm font-medium text-gray-700">Category</label>
                     <select name="category_id" id="category_id"
-                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 border p-2"
+                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 border p-2 @error('category_id') border-red-500 @enderror"
                         required onchange="updateSubCategories()">
                         <option value="">Select Category</option>
                         @foreach($categories as $category)
-                            <option value="{{ $category->id }}" {{ $product->category_id == $category->id ? 'selected' : '' }}
+                            <option value="{{ $category->id }}" {{ old('category_id', $product->category_id) == $category->id ? 'selected' : '' }}
                                 data-subcategories="{{ json_encode($category->subCategories) }}">
                                 {{ $category->name }}
                             </option>
                         @endforeach
                     </select>
+                    @error('category_id')
+                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                    @enderror
                 </div>
 
                 <div>
@@ -97,13 +106,7 @@
 
                 <div>
                     <label class="block text-sm font-medium text-gray-700">Material (Optional)</label>
-                    <input type="text" name="material" value="{{ $product->material }}" placeholder="e.g., Wood, Cotton, Metal"
-                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 border p-2">
-                </div>
-
-                <div>
-                    <label class="block text-sm font-medium text-gray-700">SKU (Optional)</label>
-                    <input type="text" name="sku" value="{{ $product->sku }}" placeholder="e.g., PROD-12345"
+                    <input type="text" name="material" value="{{ old('material', $product->material) }}" placeholder="e.g., Wood, Cotton, Metal"
                         class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 border p-2">
                 </div>
 
@@ -114,30 +117,36 @@
 
                 <div>
                     <label class="block text-sm font-medium text-gray-700">Weight (kg)</label>
-                    <input type="number" step="0.001" name="weight" value="{{ $product->weight }}"
-                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 border p-2"
+                    <input type="number" step="0.001" name="weight" value="{{ old('weight', $product->weight) }}"
+                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 border p-2 @error('weight') border-red-500 @enderror"
                         required>
+                    @error('weight')
+                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                    @enderror
                 </div>
 
                 <div class="grid grid-cols-3 gap-2">
                     <div>
                         <label class="block text-sm font-medium text-gray-700">Length (cm)</label>
-                        <input type="number" step="0.01" name="length" value="{{ $product->length }}"
-                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 border p-2"
+                        <input type="number" step="0.01" name="length" value="{{ old('length', $product->length) }}"
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 border p-2 @error('length') border-red-500 @enderror"
                             required>
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700">Width (cm)</label>
-                        <input type="number" step="0.01" name="width" value="{{ $product->width }}"
-                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 border p-2"
+                        <input type="number" step="0.01" name="width" value="{{ old('width', $product->width) }}"
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 border p-2 @error('width') border-red-500 @enderror"
                             required>
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700">Height (cm)</label>
-                        <input type="number" step="0.01" name="height" value="{{ $product->height }}"
-                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 border p-2"
+                        <input type="number" step="0.01" name="height" value="{{ old('height', $product->height) }}"
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 border p-2 @error('height') border-red-500 @enderror"
                             required>
                     </div>
+                    @error('length') <p class="text-red-500 text-xs mt-1 col-span-1">{{ $message }}</p> @enderror
+                    @error('width') <p class="text-red-500 text-xs mt-1 col-span-1">{{ $message }}</p> @enderror
+                    @error('height') <p class="text-red-500 text-xs mt-1 col-span-1">{{ $message }}</p> @enderror
                 </div>
 
                 <!-- Media -->
@@ -173,14 +182,14 @@
                     <label class="block text-sm font-medium text-gray-700">Short Description (Optional)</label>
                     <textarea name="description" rows="2"
                         class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 border p-2"
-                        placeholder="Brief product summary">{{ $product->description }}</textarea>
+                        placeholder="Brief product summary">{{ old('description', $product->description) }}</textarea>
                 </div>
 
                 <div class="col-span-2">
                     <label class="block text-sm font-medium text-gray-700">Long Description</label>
                     <textarea name="long_description" rows="6"
                         class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 border p-2"
-                        placeholder="Detailed product description with formatting">{{ $product->long_description }}</textarea>
+                        placeholder="Detailed product description with formatting">{{ old('long_description', $product->long_description) }}</textarea>
                     <p class="text-xs text-gray-500 mt-1">This will be displayed prominently on the product page</p>
                 </div>
 
