@@ -82,6 +82,8 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
 
     // Rates
     Route::post('shipping/rates', [ShippingController::class, 'storeRate'])->name('shipping.rates.store');
+    Route::get('shipping/rates/export', [ShippingController::class, 'exportRates'])->name('shipping.rates.export');
+    Route::post('shipping/rates/import', [ShippingController::class, 'importRates'])->name('shipping.rates.import');
     Route::get('shipping/rates/{rate}/edit', [ShippingController::class, 'editRate'])->name('shipping.rates.edit');
     Route::put('shipping/rates/{rate}', [ShippingController::class, 'updateRate'])->name('shipping.rates.update');
     Route::delete('shipping/rates/{rate}', [ShippingController::class, 'destroyRate'])->name('shipping.rates.destroy');
